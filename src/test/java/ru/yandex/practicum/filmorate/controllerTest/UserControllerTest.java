@@ -13,7 +13,7 @@ public class UserControllerTest {
     private final UserController userController = new UserController();
 
     @Test
-    void createUserTest(){
+    void createUserTest() {
         User user = User.builder()
                 .login("ТестЛогин")
                 .email("@")

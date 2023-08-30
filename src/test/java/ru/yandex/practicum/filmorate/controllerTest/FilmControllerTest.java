@@ -13,7 +13,7 @@ public class FilmControllerTest {
     private final FilmController filmController = new FilmController();
 
     @Test
-    void createFilmTest(){
+    void createFilmTest() {
         Film film = Film.builder()
                 .name("Тест Имя")
                 .description("Тест Описания на 200 символов.\n" +
