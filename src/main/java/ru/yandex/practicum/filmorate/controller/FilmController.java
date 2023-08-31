@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 import java.util.HashMap;
 
 @Slf4j
@@ -15,7 +16,7 @@ import java.util.HashMap;
 public class FilmController {
 
     private int id = 0;
-    private HashMap<Integer, Film> films = new HashMap<>();
+    private Map<Integer, Film> films = new HashMap<>();
 
     @GetMapping
     public Collection<Film> getAllFilms() {
@@ -29,7 +30,7 @@ public class FilmController {
         film.setId(++id);
         films.put(film.getId(), film);
         log.debug("Добавлен новый фильм: {}", film);
-        return films.get(film.getId());
+        return film;
     }
 
     @PutMapping
@@ -38,7 +39,7 @@ public class FilmController {
         checkFilm(film);
         films.put(film.getId(), film);
         log.debug("Внесены изменения в фильм: {}", film);
-        return films.get(film.getId());
+        return film;
     }
 
     private void checkFilm(Film film) {
@@ -51,7 +52,7 @@ public class FilmController {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Некорректная дата релиза");
         }
-        if (film.getDuration() < 0) {
+        if (film.getDuration() <= 0) {
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }
     }

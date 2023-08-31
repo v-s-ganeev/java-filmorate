@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 import java.util.HashMap;
 
 @Slf4j
@@ -15,7 +16,7 @@ import java.util.HashMap;
 public class UserController {
 
     private int id = 0;
-    private HashMap<Integer, User> users = new HashMap<>();
+    private Map<Integer, User> users = new HashMap<>();
 
     @GetMapping
     public Collection<User> getAllUsers() {
@@ -31,7 +32,7 @@ public class UserController {
         checkedUser.setId(++id);
         users.put(checkedUser.getId(), checkedUser);
         log.debug("Добавлен новый пользователь: {}", user);
-        return users.get(checkedUser.getId());
+        return checkedUser;
     }
 
     @PutMapping
@@ -40,7 +41,7 @@ public class UserController {
         User checkedUser = checkUser(user);
         users.put(checkedUser.getId(), checkedUser);
         log.debug("Внесены изменения в пользователя: {}", user);
-        return users.get(checkedUser.getId());
+        return checkedUser;
     }
 
     private User checkUser(User user) {

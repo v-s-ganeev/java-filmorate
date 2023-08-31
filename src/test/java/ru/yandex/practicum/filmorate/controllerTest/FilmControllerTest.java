@@ -23,7 +23,7 @@ public class FilmControllerTest {
                         "Вороне где-то бог послал кусочек сыру;\n" +
                         "На ель вор")
                 .releaseDate(LocalDate.of(1895, 12, 28))
-                .duration(0)
+                .duration(1)
                 .build();
 
         Film validatedFilm = filmController.addFilm(film);
