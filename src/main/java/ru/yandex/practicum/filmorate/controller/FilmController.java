@@ -22,12 +22,12 @@ public class FilmController {
     }
 
     @GetMapping("/{filmId}")
-    public Film getFilm(@PathVariable int filmId) {
+    public Film getFilm(@PathVariable Integer filmId) {
         return filmService.getFilm(filmId);
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") Integer count) {
         return filmService.getPopularFilms(count);
     }
 
@@ -42,12 +42,12 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public void addLike(@PathVariable int filmId, @PathVariable int userId) {
+    public void addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
         filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public void deleteLike(@PathVariable int filmId, @PathVariable int userId) {
+    public void deleteLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
         filmService.deleteLike(filmId, userId);
     }
 

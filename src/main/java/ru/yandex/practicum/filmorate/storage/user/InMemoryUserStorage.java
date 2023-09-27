@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,25 +22,24 @@ public class InMemoryUserStorage implements UserStorage {
         if (user.getId() != null) {
             throw new ValidationException("Поле id не пустое");
         }
-        User checkedUser = checkUser(user);
-        checkedUser.setId(++id);
-        users.put(checkedUser.getId(), checkedUser);
-        log.debug("Добавлен новый пользователь: {}", user);
-        return checkedUser;
+        user.setId(++id);
+        users.put(user.getId(), user);
+        log.info("Добавлен новый пользователь: {}", user);
+        return user;
     }
 
     @Override
     public User editUser(User user) {
-        if (users.get(user.getId()) == null) throw new ValidationException("Пользователь с таким id не найден");
-        User checkedUser = checkUser(user);
-        users.put(checkedUser.getId(), checkedUser);
-        log.debug("Внесены изменения в пользователя: {}", user);
-        return checkedUser;
+        if (users.get(user.getId()) == null)
+            throw new NotFoundException("Пользователь с id = " + user.getId() + " не найден");
+        users.put(user.getId(), user);
+        log.info("Внесены изменения в пользователя: {}", user);
+        return user;
     }
 
     @Override
     public void deleteUser(int userId) {
-        if (users.get(userId) == null) throw new ValidationException("Фильм с таким id не найден");
+        if (users.get(userId) == null) throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         users.remove(userId);
     }
 
@@ -52,19 +51,5 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public Collection<User> getAllUsers() {
         return users.values();
-    }
-
-    private User checkUser(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("email не может быть пустым");
-        }
-        if (!user.getEmail().contains("@")) throw new ValidationException("Некорректный email");
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            throw new ValidationException("login не может быть пустым");
-        }
-        if (user.getLogin().contains(" ")) throw new ValidationException("login не может содержать пробелы");
-        if (user.getBirthday().isAfter(LocalDate.now())) throw new ValidationException("Некорректная дата рождения");
-        if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
-        return user;
     }
 }

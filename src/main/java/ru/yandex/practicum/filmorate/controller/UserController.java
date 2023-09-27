@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -9,9 +8,8 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import java.util.Collection;
 import java.util.List;
 
-@Slf4j
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
@@ -23,18 +21,18 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable String userId) {
-        return userService.getUser(Integer.valueOf(userId));
+    public User getUser(@PathVariable Integer userId) {
+        return userService.getUser(userId);
     }
 
     @GetMapping("/{userId}/friends")
-    public List<User> getAllFriends(@PathVariable String userId) {
-        return userService.getAllFriends(Integer.valueOf(userId));
+    public List<User> getAllFriends(@PathVariable Integer userId) {
+        return userService.getAllFriends(userId);
     }
 
     @GetMapping("/{userId}/friends/common/{otherUserId}")
-    public Collection<User> getCommonFriends(@PathVariable String userId, @PathVariable String otherUserId) {
-        return userService.getCommonFriends(Integer.valueOf(userId), Integer.valueOf(otherUserId));
+    public Collection<User> getCommonFriends(@PathVariable Integer userId, @PathVariable Integer otherUserId) {
+        return userService.getCommonFriends(userId, otherUserId);
     }
 
     @PostMapping
@@ -48,13 +46,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public void addFriend(@PathVariable String userId, @PathVariable String friendId) {
-        userService.addFriend(Integer.valueOf(userId), Integer.valueOf(friendId));
+    public void addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        userService.addFriend(userId, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public void deleteFriend(@PathVariable String userId, @PathVariable String friendId) {
-        userService.deleteFriend(Integer.valueOf(userId), Integer.valueOf(friendId));
+    public void deleteFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        userService.deleteFriend(userId, friendId);
     }
 
 
