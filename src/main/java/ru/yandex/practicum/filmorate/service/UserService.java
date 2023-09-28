@@ -60,18 +60,22 @@ public class UserService {
     }
 
     public List<User> getAllFriends(int userId) {
+        if (getUser(userId) == null) throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         List<User> friends = new ArrayList<>();
-        for (User user : userStorage.getUser(userId).getFriends().values()) {
-            friends.add(user);
+        for (Integer friendId : userStorage.getUser(userId).getFriends()) {
+            friends.add(getUser(friendId));
         }
         return friends;
     }
 
     public List<User> getCommonFriends(int userId, int otherUserId) {
+        if (getUser(userId) == null) throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+        if (getUser(otherUserId) == null)
+            throw new NotFoundException("Пользователь с id = " + otherUserId + " не найден");
         List<User> commonFriends = new ArrayList<>();
-        for (User user : userStorage.getUser(userId).getFriends().values()) {
-            if (userStorage.getUser(otherUserId).getFriends().values().contains(user)) {
-                commonFriends.add(user);
+        for (Integer friendId : userStorage.getUser(userId).getFriends()) {
+            if (userStorage.getUser(otherUserId).getFriends().contains(friendId)) {
+                commonFriends.add(getUser(friendId));
             }
         }
         return commonFriends;

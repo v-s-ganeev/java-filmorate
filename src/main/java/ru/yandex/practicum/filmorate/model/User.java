@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -19,10 +19,10 @@ public class User {
     private LocalDate birthday;
     @JsonIgnore
     @ToString.Exclude
-    private Map<Integer, User> friends = new HashMap<>();
+    private Set<Integer> friends = new HashSet<>();
 
     public void addFriend(User user) {
-        friends.put(user.getId(), user);
+        friends.add(user.getId());
     }
 
     public void deleteFriend(User user) {
