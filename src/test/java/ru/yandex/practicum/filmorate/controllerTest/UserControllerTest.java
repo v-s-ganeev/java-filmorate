@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.controllerTest;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -8,9 +10,11 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class UserControllerTest {
 
-    private final UserController userController = new UserController();
+    @Autowired
+    private UserController userController;
 
     @Test
     void createUserTest() {

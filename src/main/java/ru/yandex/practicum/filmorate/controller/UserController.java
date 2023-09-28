@@ -1,60 +1,59 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
 
-@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    private int id = 0;
-    private Map<Integer, User> users = new HashMap<>();
+    private final UserService userService;
 
     @GetMapping
     public Collection<User> getAllUsers() {
-        return users.values();
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable Integer userId) {
+        return userService.getUser(userId);
+    }
+
+    @GetMapping("/{userId}/friends")
+    public List<User> getAllFriends(@PathVariable Integer userId) {
+        return userService.getAllFriends(userId);
+    }
+
+    @GetMapping("/{userId}/friends/common/{otherUserId}")
+    public Collection<User> getCommonFriends(@PathVariable Integer userId, @PathVariable Integer otherUserId) {
+        return userService.getCommonFriends(userId, otherUserId);
     }
 
     @PostMapping
     public User addUser(@RequestBody User user) {
-        if (user.getId() != null) {
-            throw new ValidationException("Поле id не пустое");
-        }
-        User checkedUser = checkUser(user);
-        checkedUser.setId(++id);
-        users.put(checkedUser.getId(), checkedUser);
-        log.debug("Добавлен новый пользователь: {}", user);
-        return checkedUser;
+        return userService.addUser(user);
     }
 
     @PutMapping
     public User editUser(@RequestBody User user) {
-        if (users.get(user.getId()) == null) throw new ValidationException("Пользователь с таким id не найден");
-        User checkedUser = checkUser(user);
-        users.put(checkedUser.getId(), checkedUser);
-        log.debug("Внесены изменения в пользователя: {}", user);
-        return checkedUser;
+        return userService.editUser(user);
     }
 
-    private User checkUser(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("email не может быть пустым");
-        }
-        if (!user.getEmail().contains("@")) throw new ValidationException("Некорректный email");
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            throw new ValidationException("login не может быть пустым");
-        }
-        if (user.getLogin().contains(" ")) throw new ValidationException("login не может содержать пробелы");
-        if (user.getBirthday().isAfter(LocalDate.now())) throw new ValidationException("Некорректная дата рождения");
-        if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
-        return user;
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        userService.addFriend(userId, friendId);
     }
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void deleteFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        userService.deleteFriend(userId, friendId);
+    }
+
+
 }
