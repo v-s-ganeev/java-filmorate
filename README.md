@@ -1,6 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
-![Untitled](https://github.com/v-s-ganeev/java-filmorate/assets/130279093/378496e1-7523-4aea-badf-63f38526c03b)
+![Untitled (1)](https://github.com/v-s-ganeev/java-filmorate/assets/130279093/00e66a24-c575-4dfd-bab5-703cc453e17b)
 
 Получить список всех пользователей:
 ```sql
