@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.controllerTest;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 
@@ -13,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class FilmControllerTest {
 
-    @Autowired
-    private FilmController filmController;
+    private FilmStorage filmStorage = new InMemoryFilmStorage();
 
     @Test
     void createFilmTest() {
@@ -30,7 +29,7 @@ public class FilmControllerTest {
                 .duration(1)
                 .build();
 
-        Film validatedFilm = filmController.addFilm(film);
+        Film validatedFilm = filmStorage.addFilm(film);
 
         assertAll("Создание пользователя выполняется не правильно: ",
                 () -> assertNotNull(validatedFilm.getId(), "Id не был присвоен")
