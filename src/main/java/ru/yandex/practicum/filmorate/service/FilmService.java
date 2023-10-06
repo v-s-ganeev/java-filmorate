@@ -36,26 +36,26 @@ public class FilmService {
     }
 
     public Film editFilm(Film film) {
-        getFilm(film.getId());
+        if (!isMovieInDb(film.getId())) throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
         checkFilm(film);
         filmStorage.editFilm(film);
         genreService.deleteAllGenresFromFilm(film.getId());
         for (Genre genre : film.getGenres()) {
             genreService.addGenreInFilm(film.getId(), genre.getId());
         }
-        return getFilm(film.getId());
+        return film;
     }
 
     public void deleteFilm(int filmId) {
-        if (filmStorage.getFilm(filmId) == null) throw new NotFoundException("Фильм с id = " + filmId + " не найден");
+        if (!isMovieInDb(filmId)) throw new NotFoundException("Фильм с id = " + filmId + " не найден");
         genreService.deleteAllGenresFromFilm(filmId);
         filmStorage.deleteFilm(filmId);
         filmStorage.deleteAllLike(filmId);
     }
 
     public Film getFilm(int filmId) {
-        if (filmStorage.getFilm(filmId) == null) throw new NotFoundException("Фильм с id = " + filmId + " не найден");
         Film filmFromDb = filmStorage.getFilm(filmId);
+        if (filmFromDb == null) throw new NotFoundException("Фильм с id = " + filmId + " не найден");
         for (Genre genre : genreService.getGenresFromFilm(filmId)) {
             filmFromDb.addGenre(genre);
         }
@@ -77,7 +77,7 @@ public class FilmService {
     }
 
     public void deleteLike(int filmId, int userId) {
-        getFilm(filmId);
+        if (!isMovieInDb(filmId)) throw new NotFoundException("Фильм с id = " + filmId + " не найден");
         userStorage.getUser(userId);
         filmStorage.deleteLike(filmId, userId);
     }
@@ -86,12 +86,27 @@ public class FilmService {
         return filmStorage.getLikes(filmId);
     }
 
+    public List<Integer> getAllLikes() {
+        return filmStorage.getAllLikes();
+    }
+
     public List<Film> getPopularFilms(int count) {
+        List<Integer> likes = getAllLikes();
         return filmStorage.getAllFilms()
                 .stream()
-                .sorted((film1, film2) -> getLikes(film1.getId()).size() - getLikes(film2.getId()).size())
+                .sorted((film1, film2) -> getLikesCount(film1.getId(), likes) - getLikesCount(film2.getId(), likes))
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isMovieInDb(Integer filmId) {
+        return filmStorage.getFilm(filmId) != null;
+    }
+
+    private Integer getLikesCount(Integer filmId, List<Integer> likes) {
+        Long likesCount = likes.stream().filter(like -> like == filmId).count();
+        return likesCount.intValue();
+
     }
 
     private void checkFilm(Film film) {

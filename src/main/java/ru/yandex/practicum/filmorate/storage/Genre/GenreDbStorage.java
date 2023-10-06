@@ -14,6 +14,9 @@ public class GenreDbStorage implements GenreStorage {
 
     private static final String SELECT_GENRE_BY_ID = "SELECT * FROM genre WHERE id = ?";
     private static final String SELECT_ALL_GENRE = "SELECT * FROM genre";
+    private static final String INSERT_FILMS_GENRE = "INSERT INTO films_genre(film_id, genre_id) VALUES(?, ?)";
+    private static final String DELETE_FILM_GENRE_FROM_FILM = "DELETE FROM films_genre WHERE film_id = ?";
+    private static final String SELECT_GENRES_FROM_FILMS = "SELECT * FROM genre WHERE id in (SELECT genre_id FROM films_genre WHERE film_id = ?)";
 
     private final JdbcTemplate jdbcTemplate;
     private final GenreRowMapper genreRowMapper;
@@ -21,17 +24,17 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public void addGenreInFilm(Integer filmId, Integer genreId) {
         getGenre(genreId);
-        jdbcTemplate.update("INSERT INTO films_genre(film_id, genre_id) VALUES(?, ?)", filmId, genreId);
+        jdbcTemplate.update(INSERT_FILMS_GENRE, filmId, genreId);
     }
 
     @Override
     public void deleteAllGenresFromFilm(Integer filmId) {
-        jdbcTemplate.update("DELETE FROM films_genre WHERE film_id = ?", filmId);
+        jdbcTemplate.update(DELETE_FILM_GENRE_FROM_FILM, filmId);
     }
 
     @Override
     public List<Genre> getGenresFromFilm(Integer filmId) {
-        return jdbcTemplate.query("SELECT * FROM genre WHERE id in (SELECT genre_id FROM films_genre WHERE film_id = ?)", genreRowMapper, filmId);
+        return jdbcTemplate.query(SELECT_GENRES_FROM_FILMS, genreRowMapper, filmId);
     }
 
     @Override

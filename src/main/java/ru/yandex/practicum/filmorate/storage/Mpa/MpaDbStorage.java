@@ -12,13 +12,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MpaDbStorage implements MpaStorage {
 
+    private final String SELECT_MPA_BY_ID = "SELECT * FROM mpa WHERE id = ?";
+    private final String SELECT_MPA = "SELECT * FROM mpa";
+
     private final JdbcTemplate jdbcTemplate;
     private final MpaRowMapper mpaRowMapper;
 
     @Override
     public Mpa getMpa(Integer mpaId) {
         Mpa mpa = jdbcTemplate
-                .query("SELECT * FROM mpa WHERE id = ?", ms -> ms.setInt(1, mpaId), mpaRowMapper)
+                .query(SELECT_MPA_BY_ID, ms -> ms.setInt(1, mpaId), mpaRowMapper)
                 .stream()
                 .findFirst()
                 .orElse(null);
@@ -28,6 +31,6 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getAllMpa() {
-        return jdbcTemplate.query("SELECT * FROM mpa", mpaRowMapper);
+        return jdbcTemplate.query(SELECT_MPA, mpaRowMapper);
     }
 }

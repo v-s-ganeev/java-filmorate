@@ -68,4 +68,15 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         return likes;
     }
+
+    @Override
+    public List<Integer> getAllLikes() {
+        List<Integer> likes = new ArrayList<>();
+        for (Film film : films.values()) {
+            for (int i = 1; i < film.getLikes().size(); i++) {
+                likes.add(film.getId());
+            }
+        }
+        return likes;
+    }
 }

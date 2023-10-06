@@ -25,4 +25,6 @@ public interface FilmStorage {
 
     List<Integer> getLikes(Integer filmId);
 
+    List<Integer> getAllLikes();
+
 }
