@@ -43,7 +43,7 @@ public class FilmService {
         for (Genre genre : film.getGenres()) {
             genreService.addGenreInFilm(film.getId(), genre.getId());
         }
-        return film;
+        return getFilm(film.getId());
     }
 
     public void deleteFilm(int filmId) {
