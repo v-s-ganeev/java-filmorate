@@ -12,8 +12,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MpaDbStorage implements MpaStorage {
 
-    private final String SELECT_MPA_BY_ID = "SELECT * FROM mpa WHERE id = ?";
-    private final String SELECT_MPA = "SELECT * FROM mpa";
+    private static final String SELECT_MPA_BY_ID = "SELECT * FROM mpa WHERE id = ?";
+    private static final String SELECT_MPA = "SELECT * FROM mpa";
 
     private final JdbcTemplate jdbcTemplate;
     private final MpaRowMapper mpaRowMapper;
