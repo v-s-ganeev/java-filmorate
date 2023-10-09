@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -33,9 +31,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public boolean deleteFilm(int filmId) {
+    public void deleteFilm(int filmId) {
         films.remove(filmId);
-        return true;
     }
 
     @Override
@@ -46,5 +43,40 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Collection<Film> getAllFilms() {
         return films.values();
+    }
+
+    @Override
+    public void addLike(Integer userId, Integer filmId) {
+        getFilm(filmId).addLike(userId);
+    }
+
+    @Override
+    public void deleteLike(Integer userId, Integer filmId) {
+        getFilm(filmId).deleteLike(userId);
+    }
+
+    @Override
+    public void deleteAllLike(Integer filmId) {
+        getFilm(filmId).deleteAllLike();
+    }
+
+    @Override
+    public List<Integer> getLikes(Integer filmId) {
+        List<Integer> likes = new ArrayList<>();
+        for (Integer userId : getFilm(filmId).getLikes()) {
+            likes.add(userId);
+        }
+        return likes;
+    }
+
+    @Override
+    public List<Integer> getAllLikes() {
+        List<Integer> likes = new ArrayList<>();
+        for (Film film : films.values()) {
+            for (int i = 1; i < film.getLikes().size(); i++) {
+                likes.add(film.getId());
+            }
+        }
+        return likes;
     }
 }
